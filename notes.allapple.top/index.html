@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlassNote AI - 笔记板</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: Inter (正文) 和 Orbitron (标题/展示) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+      // 配置 Tailwind CSS
+      tailwind.config = {
+        darkMode: 'class', // 启用基于 class 的暗黑模式
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Orbitron', 'sans-serif'],
+            },
+            colors: {
+              // 自定义玻璃拟态调色板
+              glass: {
+                100: 'rgba(255, 255, 255, 0.1)',
+                200: 'rgba(255, 255, 255, 0.2)',
+                300: 'rgba(255, 255, 255, 0.3)',
+                border: 'rgba(255, 255, 255, 0.2)',
+                dark: 'rgba(0, 0, 0, 0.3)',
+              },
+              // 主题色：靛蓝/紫罗兰色系
+              primary: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#6366f1', // Indigo
+                600: '#4f46e5',
+                700: '#4338ca',
+                800: '#3730a3',
+                900: '#312e81',
+              }
+            },
+            // 自定义动画
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            },
+            // 排版插件配置 (用于 Markdown 渲染)
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  color: theme('colors.gray.700'),
+                  a: { color: theme('colors.primary.600') },
+                  strong: { color: theme('colors.gray.900') },
+                  h1: { color: theme('colors.gray.900') },
+                  h2: { color: theme('colors.gray.800') },
+                  h3: { color: theme('colors.gray.800') },
+                  blockquote: { borderLeftColor: theme('colors.primary.200') },
+                },
+              },
+              dark: {
+                css: {
+                  color: theme('colors.gray.300'),
+                  a: { color: theme('colors.primary.400') },
+                  strong: { color: theme('colors.white') },
+                  h1: { color: theme('colors.white') },
+                  h2: { color: theme('colors.gray.100') },
+                  h3: { color: theme('colors.gray.100') },
+                  blockquote: { borderLeftColor: theme('colors.primary.700') },
+                },
+              },
+            }),
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+      /* 自定义滚动条样式 - 适配玻璃风格 */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 0.3); /* 主色调低透明度 */
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(99, 102, 241, 0.6); 
+      }
+      
+      /* Markdown 内容样式覆盖 */
+      .prose {
+        max-width: none;
+        line-height: 1.7;
+      }
+      .prose h1 { font-size: 1.75em; font-weight: 800; margin-top: 1em; margin-bottom: 0.5em; letter-spacing: -0.025em; }
+      .prose h2 { font-size: 1.4em; font-weight: 700; margin-top: 1.2em; margin-bottom: 0.5em; letter-spacing: -0.015em; }
+      .prose p { margin-bottom: 1em; }
+      .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+      .prose ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+      .prose blockquote { border-left: 4px solid currentColor; padding-left: 1.2em; margin-left: 0; opacity: 0.8; font-style: italic; font-size: 1.1em; }
+      .prose code { background: rgba(99, 102, 241, 0.1); color: #6366f1; padding: 0.2em 0.4em; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; }
+      .dark .prose code { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+      .prose pre { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 1.2em; border-radius: 12px; overflow-x: auto; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); }
+      .prose img { max-width: 100%; border-radius: 12px; margin: 1.5em 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "marked": "https://esm.sh/marked@12.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-950 text-slate-100 transition-colors duration-500 antialiased selection:bg-primary-500 selection:text-white">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

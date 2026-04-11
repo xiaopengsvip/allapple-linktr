@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>allapple.top · Everett 未来已来</title>
+<link rel="icon" href="img/logo.jpg">
+<meta name="description" content="欢迎踏入 AllApple 的全新宇宙！Everett 不仅是产品，更是一种生活方式的革命。我们将智能、艺术与情感融为一体，开启属于您的未来篇章！">
+<meta property="og:title" content="AllApple - Everett 未来已来">
+<meta property="og:description" content="欢迎踏入 AllApple 的全新宇宙！Everett 不仅是产品，更是一种生活方式的革命。我们将智能、艺术与情感融为一体，开启属于您的未来篇章！">
+<meta property="og:image" content="https://allapple.top/img/logo.jpg">
+<meta property="og:url" content="https://allapple.top/">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --glass-bg: rgba(255,255,255,0.22);
+  --border: rgba(255,255,255,0.3);
+  --radius: 20px;
+  --shadow: 0 8px 30px rgba(0,0,0,0.3);
+  --text-gray: #ddd;
+  --primary-color: #000;
+  --secondary-color: #fff;
+  --accent-color: #0071e3;
+  --text-color: #1d1d1f;
+  --bg-color: #f5f5f7;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --transition: all 0.3s ease;
+}
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+.video-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.8);
+}
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.25);
+  z-index: -1;
+}
+/* 动画 keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes glow {
+  0% { box-shadow: 0 0 5px var(--accent-color); }
+  50% { box-shadow: 0 0 20px var(--accent-color); }
+  100% { box-shadow: 0 0 5px var(--accent-color); }
+}
+.animate-fade { animation: fadeIn 1s ease-out forwards; }
+.animate-left { animation: slideInLeft 1s ease-out forwards; }
+.animate-right { animation: slideInRight 1s ease-out forwards; }
+.animate-pulse { animation: pulse 1.5s infinite; }
+.animate-rotate { animation: rotate 2s linear infinite; }
+.animate-bounce { animation: bounce 1s ease infinite; }
+.animate-glow { animation: glow 2s ease infinite; }
+/* 导航栏 */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  transition: var(--transition);
+}
+.navbar.scrolled {
+  padding: 0.75rem 5%;
+  box-shadow: var(--shadow);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+.logo:hover {
+  transform: scale(1.05) rotate(5deg);
+}
+.logo img {
+  height: 2rem;
+  max-height: 40px; /* 优化logo大小 */
+  width: auto;
+  transition: var(--transition);
+}
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  transition: var(--transition);
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  transition: var(--transition);
+}
+.nav-links a:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.nav-links a:hover::after {
+  width: 100%;
+}
+.search-bar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+.search-bar:hover {
+  border-color: var(--accent-color);
+  transform: scale(1.05);
+}
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  width: 150px;
+  transition: var(--transition);
+}
+.search-bar input:focus {
+  width: 200px;
+}
+.search-bar i {
+  color: var(--text-gray);
+  transition: var(--transition);
+}
+.search-bar:hover i {
+  color: var(--accent-color);
+  animation: bounce 0.5s ease;
+}
+/* 英雄区 - 轮播图 */
+.hero-carousel {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: opacity 1s ease, transform 1s ease;
+  opacity: 0;
+  transform: scale(1.1);
+}
+.carousel-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.carousel-slide h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: fadeIn 1.5s ease-out, glow 3s infinite;
+}
+.carousel-slide p {
+  font-size: 1.5rem;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  animation: fadeIn 2s ease-out;
+}
+.carousel-slide button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  background: var(--accent-color);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.carousel-slide button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--accent-color);
+}
+/* 部分样式 */
+.section {
+  padding: 4rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  opacity: 0;
+  transition: var(--transition);
+}
+.section.visible {
+  opacity: 1;
+  animation: fadeIn 1s ease-out forwards;
+}
+.glass-section {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  transition: var(--transition);
+}
+.glass-section:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-5px) rotate(1deg);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+.feature {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  text-align: center;
+  transition: var(--transition);
+  opacity: 0;
+  cursor: pointer;
+}
+.feature.visible {
+  opacity: 1;
+  animation: slideInLeft 1s ease-out forwards;
+}
+.feature:nth-child(even).visible {
+  animation: slideInRight 1s ease-out forwards;
+}
+.feature:hover {
+  transform: translateY(-10px) rotate(2deg);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  animation: pulse 0.5s ease;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+.table th, .table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  transition: var(--transition);
+}
+.table tr:hover {
+  background: rgba(255,255,255,0.1);
+  transform: scale(1.02);
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+.team-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  text-align: center;
+  transition: var(--transition);
+  opacity: 0;
+  cursor: pointer;
+}
+.team-card.visible {
+  opacity: 1;
+  animation: fadeIn 1s ease-out forwards;
+}
+.team-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  border-color: var(--accent-color);
+  animation: glow 1s infinite;
+}
+.blog-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+.blog-post {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  transition: var(--transition);
+  opacity: 0;
+  cursor: pointer;
+}
+.blog-post.visible {
+  opacity: 1;
+  animation: slideInRight 1s ease-out forwards;
+}
+.blog-post:hover {
+  transform: translateY(-10px) rotate(-1deg);
+  animation: bounce 0.5s ease;
+}
+.contact-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column; /* 优化为列布局，便于移动端 */
+  gap: 1rem;
+}
+.contact-form input, .contact-form textarea {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.8);
+  color: #000;
+  transition: var(--transition);
+  width: 100%; /* 确保全宽 */
+}
+.contact-form input:focus, .contact-form textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(0,113,227,0.5);
+  animation: pulse 1s infinite;
+}
+.contact-form button {
+  padding: 1rem;
+  border-radius: 10px;
+  border: none;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%; /* 全宽按钮 */
+}
+.contact-form button:hover {
+  transform: translateY(-2px) rotate(3deg);
+  background: var(--accent-color);
+  color: #fff;
+  animation: glow 1.5s infinite;
+}
+.social-section {
+  text-align: center;
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+.social-section a {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  transition: var(--transition);
+}
+.social-section a:hover {
+  color: var(--accent-color);
+  transform: scale(1.2) rotate(15deg);
+  animation: rotate 0.5s linear;
+}
+.map-container {
+  height: 300px;
+  margin-top: 2rem;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: var(--transition);
+  width: 100%; /* 确保全宽 */
+  max-height: 50vh; /* 移动端限制高度 */
+}
+.map-container:hover {
+  transform: scale(1.02) rotate(1deg);
+}
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.footer {
+  text-align: center;
+  padding: 2rem 1rem; /* 增加padding */
+  color: var(--text-gray);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem; /* 优化为flex，便于响应 */
+}
+.footer:hover {
+  color: #fff;
+  animation: fadeIn 0.5s ease;
+}
+/* 模态窗口 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  animation: fadeIn 0.5s ease;
+}
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid var(--border);
+  width: 80%;
+  max-width: 600px;
+  border-radius: var(--radius);
+  animation: slideInLeft 0.5s ease;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  animation: rotate 0.5s linear;
+}
+/* 控制按钮优化 */
+.control-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column; /* 垂直排列，便于移动端 */
+  gap: 1rem;
+  z-index: 99;
+}
+.control-btn .btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.control-btn .btn:hover {
+  transform: scale(1.1);
+  animation: bounce 0.5s ease;
+}
+/* 二维码容器优化 */
+.qrcode-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--glass-bg);
+  padding: 1rem;
+  border-radius: var(--radius);
+  text-align: center;
+  display: none;
+}
+/* 视频容器优化为响应式 */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 宽高比 */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  background: #000;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/* 媒体查询 - 响应式优化 */
+@media (max-width: 1024px) {
+  .hero-carousel h1 { font-size: 3rem; }
+  .hero-carousel p { font-size: 1.3rem; }
+  .features { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .logo img { max-height: 35px; }
+}
+@media (max-width: 768px) {
+  .navbar { flex-wrap: wrap; justify-content: space-between; padding: 0.5rem 3%; }
+  .nav-links {
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--glass-bg);
+    padding: 1rem 0;
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+    box-shadow: var(--shadow); /* 改进阴影 */
+  }
+  .nav-links.active { display: flex; }
+  .nav-links a { font-size: 1rem; padding: 0.5rem; } /* 增大字体和padding */
+  .hamburger { display: flex; flex-direction: column; gap: 0.25rem; cursor: pointer; }
+  .hamburger span { width: 1.5rem; height: 0.1875rem; background: #fff; transition: var(--transition); }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+  .hero-carousel h1 { font-size: 2.5rem; }
+  .hero-carousel p { font-size: 1.2rem; padding: 0 1rem; }
+  .section { padding: 3rem 3%; }
+  .contact-form { padding: 0 1rem; }
+  .map-container { height: 200px; } /* 移动端减小高度 */
+  .control-btn { flex-direction: row; bottom: 10px; right: 10px; gap: 0.5rem; }
+  .control-btn .btn { width: 35px; height: 35px; font-size: 1rem; }
+  .logo img { max-height: 30px; }
+  .logo-text { font-size: 1rem; }
+  .search-bar input { width: 100px; }
+  .search-bar input:focus { width: 150px; }
+}
+@media (max-width: 480px) {
+  .logo-text { font-size: 1rem; }
+  .search-bar input { width: 100px; }
+  .search-bar input:focus { width: 120px; }
+  .features, .team-grid, .blog-posts { grid-template-columns: 1fr; }
+  .table { font-size: 0.8rem; }
+  .footer { font-size: 12px; padding: 1.5rem 0.5rem; }
+  .control-btn { bottom: 5px; right: 5px; }
+}
+/* 暗模式 */
+body.dark-mode {
+  --glass-bg: rgba(0,0,0,0.22);
+  --border: rgba(0,0,0,0.3);
+  --text-gray: #666;
+  --text-color: #fff;
+  --bg-color: #1d1d1f;
+}
+</style>
+</head>
+<body>
+<!-- 背景 -->
+<video id="bgVideo" class="video-bg" autoplay loop playsinline muted>
+  <source src="video/flower.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+<!-- 顶部状态条 -->
+<div class="status-bar">
+  <span id="timeNow">🕓 加载中...</span>
+  <span id="weatherNow">🌤️ 获取天气...</span>
+</div>
+<!-- 导航栏 -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="img/logo.jpg" alt="Logo">
+    <span class="logo-text">allapple.top</span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">首页</a></li>
+    <li><a href="#video">视频</a></li>
+    <li><a href="#features">核心功能</a></li>
+    <li><a href="#specs">规格</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#blog">博客</a></li>
+    <li><a href="#contact">联系</a></li>
+    <li><a href="#privacy">隐私</a></li>
+  </ul>
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="搜索...">
+  </div>
+  <button id="darkModeToggle"><i class="fas fa-moon"></i></button>
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</nav>
+<!-- 英雄区 - 轮播图 -->
+<div class="hero-carousel" id="home">
+  <div class="carousel-slide active">
+    <h1>Everett：点亮未来的科技之星</h1>
+    <p>欢迎踏入 AllApple 的全新宇宙！Everett 不仅是产品，更是一种生活方式的革命。我们将智能、艺术与情感融为一体，打造出超越期待的科技体验。从您的第一声“嘿，Everett”，到沉浸于全息互动的奇幻旅程，每一刻都将充满惊喜与灵感。加入我们，开启属于您的未来篇章！</p>
+    <button class="animate-pulse" onclick="document.querySelector('#contact').scrollIntoView({behavior: 'smooth'})">立即探索</button>
+  </div>
+  <div class="carousel-slide">
+    <h1>发现无限可能</h1>
+    <p>Everett 重新定义智能生活，融合AI与艺术。新增AR增强现实功能，让您的日常生活如科幻电影般生动。</p>
+    <button class="animate-pulse" onclick="document.querySelector('#features').scrollIntoView({behavior: 'smooth'})">了解更多</button>
+  </div>
+  <div class="carousel-slide">
+    <h1>加入星际计划</h1>
+    <p>订阅以解锁独家功能和优先更新。享受个性化AI助手和全球社区支持。</p>
+    <button class="animate-pulse" onclick="document.querySelector('#blog').scrollIntoView({behavior: 'smooth'})">订阅现在</button>
+  </div>
+</div>
+<!-- 视频 -->
+<section class="section glass-section video-section" id="video">
+  <h2>Everett 介绍视频</h2>
+  <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/nO9aot9RgQc" title="Everett 未来已来" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <p>探索 Everett 的无限可能，通过这个视频深入了解我们的科技革命。新增互动元素：暂停视频以查看关键帧说明。</p>
+</section>
+<!-- 核心功能 -->
+<section class="section glass-section features-section" id="features">
+  <h2>Everett 核心功能</h2>
+  <div class="features">
+    <div class="feature" onclick="openModal('全息智能交互', '详细描述：Everett 的 AI 核心如同您的私人助手...')">
+      <h3>全息智能交互</h3>
+      <p>Everett 的 AI 核心如同您的私人助手，感知您的需求，响应您的每一个动作。无论是智能家居的精准控制，还是沉浸式 AR 冒险，Everett 让科技如呼吸般自然，点燃您的创造力。新增语音识别升级，支持多语言实时翻译。</p>
+    </div>
+    <div class="feature" onclick="openModal('星际订阅计划', '详细描述：成为 Everett 星际会员...')">
+      <h3>星际订阅计划</h3>
+      <p>成为 Everett 星际会员，解锁专属功能：超高清虚拟体验、优先升级特权，以及定制化主题设计。您的科技旅程将如星辰般闪耀，享受前所未有的专属荣耀。新增月度挑战活动，赢取独家奖励。</p>
+    </div>
+    <div class="feature" onclick="openModal('全球创新社区', '详细描述：加入 AllApple 全球社区...')">
+      <h3>全球创新社区</h3>
+      <p>加入 AllApple 全球社区，与千万创新者并肩同行。分享您的灵感、参与未来科技的共创，或在虚拟盛会上结识志同道合的伙伴。Everett 的社区，是您梦想的起点！新增实时论坛和虚拟见面会。</p>
+    </div>
+    <div class="feature" onclick="openModal('可持续能源管理', '详细描述：Everett 内置智能能源优化系统...')">
+      <h3>可持续能源管理</h3>
+      <p>Everett 内置智能能源优化系统，自动调整功耗，实现更长的电池续航。支持太阳能充电配件，致力于绿色科技未来。</p>
+    </div>
+  </div>
+</section>
+<!-- 规格 -->
+<section class="section glass-section specs-section" id="specs">
+  <h2>规格</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>规格</th>
+        <th>详情</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>处理器</td>
+        <td>AI Neural Core v2.0</td>
+      </tr>
+      <tr>
+        <td>显示</td>
+        <td>全息AR 8K，支持120Hz刷新率</td>
+      </tr>
+      <tr>
+        <td>电池</td>
+        <td>可持续 48小时，快充30分钟达80%</td>
+      </tr>
+      <tr>
+        <td>价格</td>
+        <td>起始 $999</td>
+      </tr>
+      <tr>
+        <td>连接</td>
+        <td>5G, Wi-Fi 6E, Bluetooth 5.3</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+<!-- 关于 -->
+<section class="section glass-section about-section" id="about">
+  <h2>关于 AllApple</h2>
+  <p>AllApple 是一家致力于推动科技与人文融合的创新公司。我们相信，未来不是遥远的梦想，而是触手可及的现实。Everett 是我们对这一信念的完美诠释——一款融合人工智能、全息显示和可持续设计的革命性设备。成立于 2020 年，总部位于硅谷，我们的团队由全球顶尖工程师、设计师和梦想家组成，共同铸就科技的诗意篇章。</p>
+  <p>我们的使命：让每一个人都能拥有属于自己的未来之星。通过 Everett，我们不仅仅提供产品，更在构建一个连接梦想与现实的生态系统。加入 AllApple，共同书写科技新时代。新增合作伙伴计划，与知名品牌合作扩展功能。</p>
+  <h3>团队</h3>
+  <div class="team-grid">
+    <div class="team-card" onclick="openModal('CEO: John Doe', '硅谷资深工程师，领导Everett项目10年。')">
+      <h3>CEO: John Doe</h3>
+      <p>硅谷资深工程师，领导Everett项目10年。</p>
+    </div>
+    <div class="team-card" onclick="openModal('CTO: Jane Smith', 'AI专家，推动全息交互创新。')">
+      <h3>CTO: Jane Smith</h3>
+      <p>AI专家，推动全息交互创新。</p>
+    </div>
+    <div class="team-card" onclick="openModal('设计师: Alex Lee', '融合艺术与科技的创意总监。')">
+      <h3>设计师: Alex Lee</h3>
+      <p>融合艺术与科技的创意总监。</p>
+    </div>
+    <div class="team-card" onclick="openModal('市场总监: Emily Chen', '全球营销专家，扩展Everett的影响力。')">
+      <h3>市场总监: Emily Chen</h3>
+      <p>全球营销专家，扩展Everett的影响力。</p>
+    </div>
+  </div>
+</section>
+<!-- 博客 -->
+<section class="section glass-section blog-section" id="blog">
+  <h2>AllApple 博客</h2>
+  <p>探索科技前沿，分享Everett最新动态。新增订阅RSS以获取实时更新。</p>
+  <div class="blog-posts">
+    <div class="blog-post" onclick="openModal('Everett AI 更新：v2.0 发布', '2025年10月，我们推出了Everett v2.0...')">
+      <h2>Everett AI 更新：v2.0 发布</h2>
+      <p>2025年10月，我们推出了Everett v2.0，集成全新全息交互和AI增强功能。v2.0 支持实时翻译和情感识别，让您的互动更智能。</p>
+      <a href="#">阅读全文</a>
+    </div>
+    <div class="blog-post" onclick="openModal('可持续设计：Everett 的环保之路', 'Everett 使用100%可回收材料...')">
+      <h2>可持续设计：Everett 的环保之路</h2>
+      <p>Everett 使用100%可回收材料，减少碳足迹。了解我们如何平衡创新与环保。</p>
+      <a href="#">阅读全文</a>
+    </div>
+    <div class="blog-post" onclick="openModal('社区故事：用户如何改变世界', '分享全球用户使用Everett创造的AR艺术...')">
+      <h2>社区故事：用户如何改变世界</h2>
+      <p>分享全球用户使用Everett创造的AR艺术和教育应用。</p>
+      <a href="#">阅读全文</a>
+    </div>
+    <div class="blog-post" onclick="openModal('未来趋势：AI在日常生活中的应用', '探讨Everett如何引领AI革命...')">
+      <h2>未来趋势：AI在日常生活中的应用</h2>
+      <p>探讨Everett如何引领AI革命，改变工作和娱乐方式。</p>
+      <a href="#">阅读全文</a>
+    </div>
+  </div>
+</section>
+<!-- 联系 -->
+<section class="section glass-section contact-section" id="contact">
+  <h2>联系我们</h2>
+  <p>我们迫不及待想与您共同探索！如有任何想法或期待，请随时联系。新增实时聊天支持。</p>
+  <form class="contact-form" id="contactForm">
+    <input type="text" placeholder="您的姓名" required>
+    <input type="email" placeholder="您的邮箱" required>
+    <textarea rows="5" placeholder="您的消息" required></textarea>
+    <button type="submit">发送消息</button>
+  </form>
+  <div class="social-section">
+    <p>或直接邮件：<a href="mailto:xiaopengsvip@gmail.com">xiaopengsvip@gmail.com</a></p>
+    <a href="https://twitter.com/intent/tweet?text=探索 AllApple Everett 的未来科技！&url=https://allapple.top" target="_blank"><i class="fab fa-x-twitter"></i></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://allapple.top" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.142!2d-73.987!3d40.758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzI5LjIiTiA3M8KwNTknMTYuMiJX!5e0!3m2!1sen!2sus!4v1234567890" loading="lazy" allowfullscreen></iframe>
+  </div>
+</section>
+<!-- 隐私 -->
+<section class="section glass-section privacy-section" id="privacy">
+  <h2>隐私政策</h2>
+  <p>AllApple致力于保护您的隐私。本政策解释我们如何收集、使用和保护您的个人信息。新增GDPR合规声明。</p>
+  <h3>数据收集</h3>
+  <p>我们仅收集必要信息，如姓名、邮箱，用于服务支持和订阅。所有数据加密存储。</p>
+  <h3>使用与共享</h3>
+  <p>数据用于改进Everett体验，不会出售给第三方。仅在法律要求时共享。</p>
+  <h3>您的权利</h3>
+  <p>您可随时访问、删除或更正数据。请联系 support@allapple.top。</p>
+  <p>最后更新：2025年10月6日。</p>
+</section>
+<footer class="footer">© <span id="year"></span> allapple.top · Designed by 小鹏</footer>
+<!-- 控制按钮 -->
+<div class="control-btn">
+  <div class="btn" id="musicBtn" title="播放音乐">🎵</div>
+  <div class="btn" id="videoBtn" title="暂停视频">🎬</div>
+  <div class="btn" id="soundBtn" title="切换视频声音">🔊</div>
+</div>
+<!-- 二维码容器 -->
+<div class="qrcode-box" id="qrcodeBox">
+  <canvas id="qrcode"></canvas>
+  <p style="color:#fff;font-size:13px;">扫码访问 allapple.top</p>
+</div>
+<!-- 模态窗口 -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalContent"></p>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+// 年份显示
+document.getElementById('year').textContent = new Date().getFullYear();
+// 时间显示
+function updateTime() {
+  const now = new Date();
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const dateStr = now.toLocaleDateString('zh-CN', dateOptions);
+  const timeStr = now.toLocaleTimeString('zh-CN', timeOptions);
+  document.getElementById('timeNow').textContent = `🕓 ${dateStr} ${timeStr}`;
+}
+setInterval(updateTime, 1000);
+updateTime();
+// 天气和位置 (优化错误处理)
+let userLat, userLon, userLocation = '未知位置';
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error, { timeout: 10000, enableHighAccuracy: true });
+  } else {
+    loadWeatherDefault();
+  }
+}
+function success(position) {
+  userLat = position.coords.latitude;
+  userLon = position.coords.longitude;
+  fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${userLat}&longitude=${userLon}&localityLanguage=zh`)
+    .then(res => res.json())
+    .then(data => {
+      userLocation = data.city || data.locality || data.countryName || '未知位置';
+      loadWeatherGeo();
+    })
+    .catch(() => loadWeatherDefault());
+}
+function error() {
+  loadWeatherDefault();
+}
+async function loadWeatherGeo() {
+  try {
+    const format = '%l | %C %t %f | 日出:%s 日落:%S | UV:%u | %w | 湿:%h%% | 降:%p%%';
+    const res = await fetch(`https://wttr.in/${userLat},${userLon}?format=${encodeURIComponent(format)}&lang=zh`);
+    let text = await res.text();
+    text = text.replace(/\n/g, ' | ').trim();
+    document.getElementById('weatherNow').textContent = `🌤️ ${text}`;
+  } catch {
+    loadWeatherDefault();
+  }
+}
+async function loadWeatherDefault() {
+  try {
+    userLocation = '北京';
+    const format = '%l | %C %t %f | 日出:%s 日落:%S | UV:%u | %w | 湿:%h%% | 降:%p%%';
+    const res = await fetch(`https://wttr.in/Beijing?format=${encodeURIComponent(format)}&lang=zh`);
+    let text = await res.text();
+    text = text.replace(/\n/g, ' | ').trim();
+    document.getElementById('weatherNow').textContent = `🌤️ ${text}`;
+  } catch {
+    document.getElementById('weatherNow').textContent = '☁️ 无法获取天气';
+  }
+}
+getLocation();
+// 音乐控制
+const music = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+music.loop = true; music.volume = 0.5;
+let musicPlaying = false;
+document.getElementById('musicBtn').onclick = () => {
+  musicPlaying = !musicPlaying;
+  musicPlaying ? music.play() : music.pause();
+  document.getElementById('musicBtn').textContent = musicPlaying ? '⏸️' : '🎵';
+  document.getElementById('musicBtn').classList.toggle('animate-rotate', musicPlaying);
+};
+// 视频播放控制
+const video = document.getElementById('bgVideo');
+let videoPlaying = true;
+document.getElementById('videoBtn').onclick = () => {
+  videoPlaying = !videoPlaying;
+  videoPlaying ? video.play() : video.pause();
+  document.getElementById('videoBtn').textContent = videoPlaying ? '⏸️' : '▶️';
+};
+// 视频声音控制
+let videoMuted = true;
+document.getElementById('soundBtn').onclick = () => {
+  videoMuted = !videoMuted;
+  video.muted = videoMuted;
+  document.getElementById('soundBtn').textContent = videoMuted ? '🔇' : '🔊';
+};
+// 二维码分享 (优化显示动画)
+const qrcodeBox = document.getElementById('qrcodeBox');
+document.querySelector('.social-section a[href*="twitter"]').addEventListener('click', (e) => {
+  qrcodeBox.style.display = 'block';
+  qrcodeBox.style.animation = 'fadeIn 0.5s ease-out';
+  QRCode.toCanvas(document.getElementById('qrcode'), window.location.href, { width: 150 });
+});
+qrcodeBox.addEventListener('click', () => {
+  qrcodeBox.style.animation = 'fadeOut 0.5s ease-out';
+  setTimeout(() => qrcodeBox.style.display = 'none', 500);
+});
+// 轮播图动画
+const slides = document.querySelectorAll('.carousel-slide');
+let currentSlide = 0;
+function showSlide(index) {
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+}
+setInterval(() => {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}, 5000);
+// 汉堡菜单 (添加动画)
+const hamburger = document.getElementById('hamburger');
+hamburger.addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('active');
+  hamburger.classList.toggle('active');
+});
+// 暗模式
+const toggle = document.getElementById('darkModeToggle');
+const icon = toggle.querySelector('i');
+toggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  icon.classList.toggle('fa-moon');
+  icon.classList.toggle('fa-sun');
+  icon.classList.add('animate-rotate');
+  setTimeout(() => icon.classList.remove('animate-rotate'), 500);
+});
+// 表单提交 (添加验证和反馈)
+document.getElementById('contactForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = e.target[0].value.trim();
+  const email = e.target[1].value.trim();
+  const message = e.target[2].value.trim();
+  if (!name || !email || !message) {
+    alert('请填写所有字段！');
+    return;
+  }
+  if (!email.match(/^\S+@\S+\.\S+$/)) {
+    alert('请输入有效的邮箱！');
+    return;
+  }
+  alert('感谢您的消息！我们将尽快回复。');
+  e.target.reset();
+});
+// 滚动动画 (Intersection Observer)
+const sections = document.querySelectorAll('.section, .feature, .team-card, .blog-post');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+sections.forEach(section => observer.observe(section));
+// 导航栏滚动效果
+window.addEventListener('scroll', () => {
+  document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+// 模态窗口功能
+const modal = document.getElementById('myModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalContent = document.getElementById('modalContent');
+const span = document.getElementsByClassName('close')[0];
+
+function openModal(title, content) {
+  modalTitle.textContent = title;
+  modalContent.textContent = content;
+  modal.style.display = 'block';
+}
+
+span.onclick = function() {
+  modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>短视频播放平台 · 全局控制版</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  /* ---------- 基础与背景 ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;width:100%;font-family:"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;background:#000;color:#fff;overflow:hidden}
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:radial-gradient(circle at 30% 20%, rgba(40,50,90,0.45), rgba(0,0,0,1) 60%);
+    filter:blur(90px) brightness(0.8);
+  }
+  /* ---------- 顶部栏 ---------- */
+  .top-bar{
+    position:fixed;left:14px;right:14px;top:14px;z-index:80;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;border-radius:14px;
+    background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 6px 26px rgba(0,0,0,0.5);
+  }
+  .hamburger-btn{
+    background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:8px;transition:all .2s ease;
+  }
+  .hamburger-btn:hover{opacity:0.8;transform:scale(1.1)}
+  .hamburger-menu{
+    position:absolute;top:100%;left:0;width:100%;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.08);border-radius:0 0 14px 14px;
+    display:none;flex-direction:column;gap:0;padding:8px 0;z-index:100;
+    box-shadow:0 6px 26px rgba(0,0,0,0.5);
+  }
+  .hamburger-menu.show{display:flex}
+  .type-btn{
+    background:none;border:none;color:#fff;padding:12px 20px;text-align:left;font-weight:600;cursor:pointer;transition:all .2s ease;
+    white-space:nowrap;width:100%;
+  }
+  .type-btn:hover{background:rgba(255,255,255,0.14);padding-left:24px}
+  .type-btn.active{
+    background:linear-gradient(135deg,#23a6d5,#23d5ab);
+    box-shadow:inset 0 2px 8px rgba(35,166,213,0.4);
+  }
+  .top-bar .btn{background:linear-gradient(135deg,#23a6d5,#23d5ab);border:none;padding:8px 12px;border-radius:10px;color:#fff;cursor:pointer;font-weight:700}
+  /* ---------- 视频容器（滚动） ---------- */
+  .container{
+    position:absolute;inset:0;margin-top:0;overflow-y:auto;scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;
+  }
+  .video-card{
+    width:100%;height:100vh;scroll-snap-align:start;position:relative;display:flex;align-items:center;justify-content:center;background:#000;
+  }
+  video{
+    width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;
+    transition:transform .35s ease, filter .25s ease;
+    -webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+  }
+  /* ---------- 中央点击反馈 ---------- */
+  .tap-feedback{
+    position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.8);z-index:120;
+    pointer-events:none;font-size:84px;color:rgba(255,255,255,0.95);opacity:0;transition:all .35s ease;
+    text-shadow:0 10px 40px rgba(0,0,0,0.6);
+  }
+  .tap-feedback.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  /* ---------- 全局控制面板（毛玻璃） ---------- */
+  .control-panel{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:90;
+    display:flex;gap:12px;padding:10px 14px;border-radius:28px;
+    background:rgba(255,255,255,0.06);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 30px rgba(0,0,0,0.6);
+    align-items:center;
+  }
+  .control-panel .btn{
+    width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,0.12);
+    color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+  .control-panel .btn:hover{transform:scale(1.08);background:rgba(255,255,255,0.22)}
+  .control-panel .wide{min-width:86px;border-radius:14px;padding:8px 12px;display:flex;gap:8px;align-items:center;justify-content:center;font-weight:700}
+  .control-panel .speed-label{font-size:15px;padding-left:6px}
+  /* ---------- 进度条 ---------- */
+  .progress-container {
+    flex: 1;
+    max-width: 120px;
+    height: 48px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 4px;
+  }
+  .progress-container.visible {
+    display: flex;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.2);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(135deg,#23a6d5,#23d5ab);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+  }
+  .time-display {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+    min-width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* ---------- 清屏浮标 ---------- */
+  .clean-marker{
+    position:fixed;bottom:22px;right:22px;z-index:95;
+    width:48px;height:48px;border-radius:50%;border:none;
+    background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.08);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    font-size:18px;cursor:pointer;transition:all .25s ease;opacity:0;pointer-events:none;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  }
+  .clean-marker:hover{transform:scale(1.1);background:rgba(255,255,255,0.22)}
+  .clean-mode .clean-marker{opacity:1;pointer-events:auto;}
+  /* ---------- 顶部小标签（当前视频地址） ---------- */
+  .current-info{
+    position:fixed;left:16px;bottom:92px;right:16px;z-index:80;font-size:13px;color:#cfcfcf;
+    text-shadow:0 2px 8px rgba(0,0,0,0.6);pointer-events:none;
+  }
+  /* ---------- 隐藏 UI（清屏） ---------- */
+  .clean-mode .control-panel,
+  .clean-mode .top-bar,
+  .clean-mode .current-info{
+    opacity:0;transform:translateY(8px);pointer-events:none;
+  }
+  /* ---------- 历史记录模态 ---------- */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:200;backdrop-filter:blur(10px)}
+  .modal .card{width:92%;max-width:720px;background:rgba(20,20,30,0.9);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);color:#fff}
+  .modal pre{max-height:420px;overflow:auto;background:rgba(0,0,0,0.25);padding:10px;border-radius:8px;white-space:pre-wrap}
+  /* ---------- 响应式调整 ---------- */
+  @media(max-width:720px){
+    .control-panel{gap:10px;padding:8px 10px}
+    .control-panel .btn{width:44px;height:44px}
+    .tap-feedback{font-size:56px}
+    .hamburger-menu{padding:6px 0}
+    .type-btn{padding:10px 16px;font-size:14px}
+    .clean-marker{width:44px;height:44px;font-size:16px;bottom:18px;right:18px}
+    .progress-container{max-width:80px}
+    .time-display{font-size:11px;min-width:60px}
+  }
+</style>
+</head>
+<body>
+  <!-- 顶部栏：汉堡菜单 + 历史 -->
+  <div class="top-bar" id="topBar">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="视频分类"><i class="fa fa-bars"></i></button>
+    <div class="hamburger-menu" id="hamburgerMenu">
+      <button class="type-btn active" data-type="zzxjj">小姐姐随机视频</button>
+      <button class="type-btn" data-type="xgg">小哥哥视频</button>
+      <button class="type-btn" data-type="yuzu">玉足美腿</button>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button id="btnHistory" class="btn"><i class="fa fa-clock-rotate-left"></i></button>
+      <button id="btnRefresh" class="btn" title="刷新当前列表"><i class="fa fa-arrows-rotate"></i></button>
+    </div>
+  </div>
+  <!-- 视频滚动容器 -->
+  <div class="container" id="container"></div>
+  <!-- 当前信息（URL或源） -->
+  <div class="current-info" id="currentInfo">加载中...</div>
+  <!-- 中央点击反馈 -->
+  <div class="tap-feedback" id="tapFeedback"><i class="fa fa-pause"></i></div>
+  <!-- 全局控制面板 -->
+  <div class="control-panel" id="controlPanel" role="toolbar" aria-label="全局控制">
+    <button class="btn" id="globalPlay" title="播放 / 暂停"><i class="fa fa-pause"></i></button>
+    <button class="btn" id="globalMute" title="静音 / 取消静音"><i class="fa fa-volume-up"></i></button>
+    <button class="btn wide" id="globalSpeed" title="切换倍速"><span class="speed-label">1×</span></button>
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time-display" id="timeDisplay">
+        <span id="currentTime">00:00</span> / <span id="duration">--:--</span>
+      </div>
+    </div>
+    <button class="btn" id="globalClean" title="清屏 / 显示 UI"><i class="fa fa-eye-slash"></i></button>
+    <button class="btn" id="globalFullscreen" title="当前视频全屏"><i class="fa fa-expand"></i></button>
+    <button class="btn" id="globalDownload" title="下载当前视频"><i class="fa fa-download"></i></button>
+  </div>
+  <!-- 清屏浮标 -->
+  <button class="clean-marker" id="cleanMarker" title="显示 UI"><i class="fa fa-eye"></i></button>
+  <!-- 历史模态 -->
+  <div class="modal" id="historyModal" aria-hidden="true">
+    <div class="card">
+      <h3>观看历史</h3>
+      <pre id="historyList">暂无历史记录</pre>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button id="clearHistory" class="btn" style="padding:8px 12px">清除</button>
+        <button id="closeHistory" class="btn" style="padding:8px 12px">关闭</button>
+      </div>
+    </div>
+  </div>
+<script>
+/* ========= 配置区 ========= */
+const apiEndpoints = {
+  zzxjj: 'https://api.yujn.cn/api/zzxjj.php',
+  xgg: 'https://api.yujn.cn/api/xgg.php',
+  yuzu: 'https://api.yujn.cn/api/yuzu.php'
+};
+const HISTORY_KEY = 'video_history_list_v1';
+const INITIAL_LOAD = 30;
+const LOAD_MORE = 4;
+/* ========= 状态 ========= */
+let currentType = 'zzxjj'; // 默认类型
+let videos = []; // NodeList -> array of <video>
+let currentVideo = null; // 当前焦点视频（IntersectionObserver 判定）
+let prevCurrentVideo = null;
+let isPlaying = true; // 全局播放状态：true -> play currentVideo, false -> pause all
+let isMuted = false; // 全局静音
+let speeds = [0.5,1,1.5,2];
+let speedIndex = 1; // 默认 1x
+let isClean = false; // 清屏模式
+let isLoading = false;
+/* ========= UI 元素 ========= */
+const container = document.getElementById('container');
+const currentInfo = document.getElementById('currentInfo');
+const tapFeedback = document.getElementById('tapFeedback');
+const controlPanel = document.getElementById('controlPanel');
+const globalPlay = document.getElementById('globalPlay');
+const globalMute = document.getElementById('globalMute');
+const globalSpeed = document.getElementById('globalSpeed');
+const globalClean = document.getElementById('globalClean');
+const globalFullscreen = document.getElementById('globalFullscreen');
+const globalDownload = document.getElementById('globalDownload');
+const progressContainer = document.getElementById('progressContainer');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+const btnHistory = document.getElementById('btnHistory');
+const historyModal = document.getElementById('historyModal');
+const historyList = document.getElementById('historyList');
+const closeHistory = document.getElementById('closeHistory');
+const clearHistoryBtn = document.getElementById('clearHistory');
+const btnRefresh = document.getElementById('btnRefresh');
+const cleanMarker = document.getElementById('cleanMarker');
+/* ========= 辅助函数 ========= */
+function formatTime(seconds) {
+  if (isNaN(seconds)) return '00:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+function saveHistory(url){
+  try{
+    const list = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    if(!list.includes(url)){
+      list.unshift(url);
+      if(list.length>200) list.length = 200;
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    }
+  }catch(e){}
+}
+function loadHistory(){ return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]') }
+/* 点击反馈动画 */
+function showTapFeedback(iconClass){
+  tapFeedback.innerHTML = `<i class="${iconClass}"></i>`;
+  tapFeedback.classList.add('show');
+  clearTimeout(tapFeedback._t);
+  tapFeedback._t = setTimeout(()=> tapFeedback.classList.remove('show'), 420);
+}
+/* 获取当前可视（或最接近中心）的 video 元素（fallback） */
+function getBestVisibleVideo(){
+  if(currentVideo) return currentVideo;
+  // fallback: choose the first in DOM
+  return videos[0] || null;
+}
+/* 设置全局播放/暂停（注意：只播放 currentVideo） */
+function setPlayState(play){
+  isPlaying = !!play;
+  if(isPlaying){
+    const v = getBestVisibleVideo();
+    if(v){
+      videos.forEach(x=>{ if(x!==v) try{ x.pause() }catch{} });
+      v.play().catch(()=>{}); // allow play promise rejection
+    }
+    globalPlay.innerHTML = '<i class="fa fa-pause"></i>';
+    showTapFeedback('fa fa-play');
+  }else{
+    videos.forEach(x=>{ try{ x.pause() }catch{} });
+    globalPlay.innerHTML = '<i class="fa fa-play"></i>';
+    showTapFeedback('fa fa-pause');
+  }
+}
+/* 切换静音 */
+function toggleMute(){
+  isMuted = !isMuted;
+  videos.forEach(v => { try{ v.muted = isMuted }catch{} });
+  globalMute.innerHTML = isMuted ? '<i class="fa fa-volume-mute"></i>' : '<i class="fa fa-volume-up"></i>';
+}
+/* 切换倍速（全局） */
+function cycleSpeed(){
+  speedIndex = (speedIndex + 1) % speeds.length;
+  const s = speeds[speedIndex];
+  videos.forEach(v=>{ try{ v.playbackRate = s }catch{} });
+  document.querySelector('.speed-label').textContent = s + '×';
+}
+/* 切换清屏（隐藏 UI） */
+function toggleClean(){
+  isClean = !isClean;
+  document.body.classList.toggle('clean-mode', isClean);
+  if(isClean){
+    globalClean.innerHTML = '<i class="fa fa-eye"></i>'; // 切换图标为眼睛
+  } else {
+    globalClean.innerHTML = '<i class="fa fa-eye-slash"></i>';
+  }
+}
+/* 当前视频全屏 */
+function toggleFullscreenForCurrent(){
+  const v = getBestVisibleVideo();
+  if(!v) return;
+  if(!document.fullscreenElement){
+    v.requestFullscreen?.().catch(()=>{});
+  } else {
+    document.exitFullscreen?.().catch(()=>{});
+  }
+}
+/* 下载当前视频 */
+function downloadCurrent(){
+  const v = getBestVisibleVideo();
+  if(!v) return alert('当前没有可下载的视频');
+  const a = document.createElement('a');
+  a.href = v.currentSrc || v.src;
+  a.download = 'video_' + Date.now() + '.mp4';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+/* 更新 currentInfo 显示 */
+function updateCurrentInfo(){
+  const v = getBestVisibleVideo();
+  if(v) currentInfo.textContent = `当前视频： ${v.currentSrc || v.src}`;
+  else currentInfo.textContent = '暂无视频';
+}
+/* 更新进度条 */
+function setDuration(e) {
+  const v = e.target;
+  progressFill.style.width = '0%';
+  currentTimeEl.textContent = '00:00';
+  if (v.duration && !isNaN(v.duration) && v.duration !== Infinity && v.duration > 0) {
+    durationEl.textContent = formatTime(v.duration);
+    progressContainer.classList.add('visible');
+  } else {
+    durationEl.textContent = '--:--';
+    progressContainer.classList.remove('visible');
+  }
+}
+function updateProgress(e) {
+  const v = e.target;
+  if (v.duration && !isNaN(v.duration) && v.duration !== Infinity && v.duration > 0) {
+    const progress = (v.currentTime / v.duration) * 100;
+    progressFill.style.width = progress + '%';
+    currentTimeEl.textContent = formatTime(v.currentTime);
+  }
+}
+/* 进度条点击跳转 */
+progressContainer.addEventListener('click', (e) => {
+  const v = currentVideo;
+  if (!v || !v.duration || isNaN(v.duration) || v.duration === Infinity || v.duration <= 0) return;
+  const rect = progressContainer.getBoundingClientRect();
+  const pos = (e.clientX - rect.left) / rect.width;
+  v.currentTime = pos * v.duration;
+});
+/* ========= IntersectionObserver：判定当前视频 ========= */
+const io = new IntersectionObserver(entries=>{
+  // choose the one with highest intersection ratio
+  let best = null, ratio = 0;
+  for(const e of entries){
+    if(e.intersectionRatio > ratio){
+      ratio = e.intersectionRatio;
+      best = e.target;
+    }
+  }
+  if(best){
+    // remove listeners from previous
+    if (prevCurrentVideo && prevCurrentVideo !== best) {
+      prevCurrentVideo.removeEventListener('timeupdate', updateProgress);
+      prevCurrentVideo.removeEventListener('loadedmetadata', setDuration);
+    }
+    prevCurrentVideo = currentVideo;
+    // update currentVideo
+    currentVideo = best;
+    updateCurrentInfo();
+    // reset progress and time
+    progressFill.style.width = '0%';
+    currentTimeEl.textContent = '00:00';
+    durationEl.textContent = '--:--';
+    progressContainer.classList.remove('visible');
+    // add listeners to new
+    currentVideo.addEventListener('loadedmetadata', setDuration);
+    currentVideo.addEventListener('timeupdate', updateProgress);
+    // 如果全局处于播放状态，则确保只播放 currentVideo
+    if(isPlaying){
+      videos.forEach(v=>{ if(v !== currentVideo) try{ v.pause() }catch{} });
+      currentVideo.play?.().catch(()=>{});
+    }
+  }
+}, { threshold:[0.25,0.45,0.6,0.85] });
+/* ========= 创建单个视频卡（懒加载真实地址） ========= */
+async function resolveRealUrl(apiUrl){
+  try{
+    const r = await fetch(apiUrl, {method:'GET', redirect:'follow'});
+    const ct = (r.headers.get('content-type')||'');
+    let url = r.url;
+    if(ct.includes('json')){
+      const j = await r.json();
+      if(j && j.url) url = j.url;
+    }
+    return url;
+  } catch(err){
+    console.warn('resolveRealUrl error', err);
+    return apiUrl;
+  }
+}
+async function createVideoCard(){
+  const card = document.createElement('div');
+  card.className = 'video-card';
+  // placeholder video element
+  const vid = document.createElement('video');
+  vid.setAttribute('playsinline','');
+  vid.setAttribute('webkit-playsinline','');
+  vid.muted = isMuted;
+  vid.loop = false;
+  vid.preload = 'metadata';
+  vid.style.backgroundColor = '#000';
+  card.appendChild(vid);
+  container.appendChild(card);
+  // bind click -> toggle global play and set currentVideo
+  card.addEventListener('click', (ev)=>{
+    // ignore clicks that hit UI buttons (none inside card in this design)
+    // set this video as current
+    currentVideo = vid;
+    updateCurrentInfo();
+    setPlayState(!isPlaying);
+  });
+  // on play, save to history
+  vid.addEventListener('play', ()=> {
+    saveHistory(vid.currentSrc || vid.src);
+  });
+  // resolve actual URL (lazy)
+  const apiUrl = apiEndpoints[currentType] + '?v=' + Date.now() + '_' + Math.random();
+  // set poster? skip for now
+  const resolved = await resolveRealUrl(apiUrl);
+  vid.src = resolved;
+  // observe for visibility
+  io.observe(card);
+  videos = [...document.querySelectorAll('video')];
+  // init playbackRate and muted
+  vid.playbackRate = speeds[speedIndex];
+  vid.muted = isMuted;
+  return card;
+}
+/* ========= 批量加载 ========= */
+async function loadBatch(count){
+  if(isLoading) return;
+  isLoading = true;
+  for(let i=0;i<count;i++){
+    await createVideoCard();
+  }
+  videos = [...document.querySelectorAll('video')];
+  isLoading = false;
+}
+/* ========= 自动加载更多（滚动触发） ========= */
+container.addEventListener('scroll', ()=>{
+  // auto-load more when near bottom
+  const threshold = 1500; // px
+  if(container.scrollTop + container.clientHeight + threshold > container.scrollHeight){
+    loadBatch(LOAD_MORE);
+  }
+});
+/* ========= 全局控制按钮事件绑定 ========= */
+globalPlay.addEventListener('click', ()=>{
+  setPlayState(!isPlaying);
+});
+globalMute.addEventListener('click', ()=> toggleMute());
+globalSpeed.addEventListener('click', ()=> { cycleSpeed(); });
+globalClean.addEventListener('click', ()=> toggleClean());
+globalFullscreen.addEventListener('click', ()=> toggleFullscreenForCurrent());
+globalDownload.addEventListener('click', ()=> downloadCurrent());
+/* 清屏浮标事件 */
+cleanMarker.addEventListener('click', ()=> toggleClean());
+/* ========= 汉堡菜单事件 ========= */
+hamburgerBtn.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  hamburgerMenu.classList.toggle('show');
+});
+document.addEventListener('click', (e)=>{
+  if(!topBar.contains(e.target)){
+    hamburgerMenu.classList.remove('show');
+  }
+});
+/* ========= 类型按钮事件 ========= */
+hamburgerMenu.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.type-btn');
+  if(!btn || btn.classList.contains('active')) return;
+  // 移除所有 active
+  hamburgerMenu.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  // 添加 active 到当前
+  btn.classList.add('active');
+  // 隐藏菜单
+  hamburgerMenu.classList.remove('show');
+  // 切换类型
+  currentType = btn.dataset.type;
+  // 重新加载
+  container.innerHTML = '';
+  videos = []; currentVideo = null; prevCurrentVideo = null;
+  progressFill.style.width = '0%';
+  currentTimeEl.textContent = '00:00';
+  durationEl.textContent = '--:--';
+  progressContainer.classList.remove('visible');
+  loadBatch(INITIAL_LOAD).then(()=>{ if(isPlaying) setPlayState(true); });
+});
+/* ========= 历史模态控制 ========= */
+btnHistory.addEventListener('click', ()=>{
+  const list = loadHistory();
+  historyList.textContent = list.length ? list.join('\n\n') : '暂无历史记录';
+  historyModal.style.display = 'flex';
+  historyModal.setAttribute('aria-hidden','false');
+});
+closeHistory.addEventListener('click', ()=> { historyModal.style.display = 'none'; historyModal.setAttribute('aria-hidden','true'); });
+clearHistoryBtn.addEventListener('click', ()=> { localStorage.removeItem(HISTORY_KEY); historyList.textContent = '已清除'; });
+historyModal.addEventListener('click', (e)=> { if(e.target === historyModal) { historyModal.style.display='none'; historyModal.setAttribute('aria-hidden','true'); } });
+btnRefresh.addEventListener('click', ()=>{
+  // 重载当前类型列表
+  container.innerHTML = '';
+  videos = []; currentVideo = null; prevCurrentVideo = null;
+  progressFill.style.width = '0%';
+  currentTimeEl.textContent = '00:00';
+  durationEl.textContent = '--:--';
+  progressContainer.classList.remove('visible');
+  loadBatch(INITIAL_LOAD);
+});
+/* ========= 键盘快捷键 ========= */
+document.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space'){ e.preventDefault(); setPlayState(!isPlaying); }
+  if(e.code === 'KeyM'){ toggleMute(); }
+  if(e.code === 'KeyF'){ toggleFullscreenForCurrent(); }
+  if(e.code === 'ArrowRight'){ cycleSpeed(); }
+  if(e.code === 'ArrowLeft'){ speedIndex = (speedIndex - 1 + speeds.length) % speeds.length; cycleSpeed(); }
+});
+/* ========= 页面可见性：切换到后台暂停所有播放（节省资源） ========= */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden){ videos.forEach(v=>v.pause()); }
+  else { if(isPlaying) setPlayState(true); }
+});
+/* ========= video events -> update global UI (synchronize) ========= */
+// ensure when any video plays, we switch currentVideo, pause others, update buttons
+container.addEventListener('play', (e)=>{
+  const t = e.target;
+  if(t.tagName === 'VIDEO'){
+    currentVideo = t;
+    videos.forEach(v=>{ if(v !== t) try{ v.pause(); }catch{} });
+    isPlaying = true; globalPlay.innerHTML = '<i class="fa fa-pause"></i>';
+    updateCurrentInfo();
+    saveHistory(t.currentSrc || t.src);
+    showTapFeedback('fa fa-play');
+  }
+}, true);
+container.addEventListener('pause', (e)=>{
+  const t = e.target;
+  if(t.tagName === 'VIDEO'){
+    // if all paused, update globalPlay icon
+    const anyPlaying = videos.some(v=>!v.paused);
+    if(!anyPlaying){
+      isPlaying = false; globalPlay.innerHTML = '<i class="fa fa-play"></i>';
+      showTapFeedback('fa fa-pause');
+    }
+  }
+}, true);
+/* ========= 视频结束 -> 自动滚动到下一个并播放 ========= */
+container.addEventListener('ended', (e)=>{
+  if(e.target.tagName !== 'VIDEO') return;
+  // find next video element in DOM
+  const list = [...document.querySelectorAll('.video-card')];
+  const idx = list.findIndex(card => card.contains(e.target));
+  if(idx >= 0 && idx < list.length - 1){
+    const nextCard = list[idx + 1];
+    nextCard.scrollIntoView({behavior:'smooth', block:'center'});
+    // play next after short delay
+    setTimeout(()=> {
+      const v = nextCard.querySelector('video');
+      if(v){ currentVideo = v; setPlayState(true); }
+    }, 550);
+  } else {
+    // if at end, try load more and then play next
+    loadBatch(LOAD_MORE).then(()=>{
+      const newList = [...document.querySelectorAll('.video-card')];
+      const next = newList[idx + 1];
+      if(next){
+        next.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(()=> { const v = next.querySelector('video'); if(v){ currentVideo = v; setPlayState(true); } }, 600);
+      }
+    });
+  }
+}, true);
+/* ========= 初始加载 ========= */
+(async function init(){
+  await loadBatch(INITIAL_LOAD);
+  // set initial playback behavior: play first visible
+  videos = [...document.querySelectorAll('video')];
+  // in some browsers autoplay with sound is blocked; we keep videos muted by default if not allowed
+  if(videos.length > 0){
+    // if autoplay fails due to policy, we don't crash
+    setPlayState(true);
+  }
+  updateCurrentInfo();
+  // set initial speed label
+  document.querySelector('.speed-label').textContent = speeds[speedIndex] + '×';
+})();
+</script>
+</body>
+</html>

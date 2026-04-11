@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>allapple.top · Apple风格聚合页</title>
+<link rel="icon" href="img/logo.jpg">
+<meta name="description" content="体验 allapple.top —— Apple风格聚合页，视频、音乐、灵感与极简设计的融合。">
+<meta property="og:title" content="allapple.top · Apple风格聚合页">
+<meta property="og:description" content="探索极简设计与灵感空间。">
+<meta property="og:image" content="https://linktr.allapple.top/img/share.jpg">
+<meta property="og:url" content="https://linktr.allapple.top/">
+<style>
+:root {
+  --glass-bg: rgba(255,255,255,0.22);
+  --border: rgba(255,255,255,0.3);
+  --radius: 20px;
+  --shadow: 0 8px 30px rgba(0,0,0,0.3);
+  --text-gray: #ddd;
+}
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+  overflow-x: hidden;
+}
+.video-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.8);
+}
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.25);
+  z-index: -1;
+}
+/* 内容层 */
+.main {
+  position: relative;
+  z-index: 10;
+  padding: 80px 20px 40px; /* 增加顶部padding以避免状态栏遮挡logo */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+/* LOGO */
+.header img {
+  width: 120px;
+  height: 120px;
+  border-radius: 30px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  animation: logoFloat 6s ease-in-out infinite;
+}
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.header h1 { margin: 10px 0 4px; font-size: 30px; }
+.header p { color: var(--text-gray); font-size: 15px; }
+/* 毛玻璃 */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  margin-top: 25px;
+  transition: all .3s ease;
+  animation: fadeInUp 0.8s ease-out;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.glass:hover { background: rgba(255,255,255,0.3); }
+/* 联系方式玻璃 */
+.contact {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  max-width: 400px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+.contact h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+/* 链接按钮 */
+.link {
+  display: block;
+  margin: 10px auto;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .3s;
+  position: relative;
+  overflow: hidden;
+}
+.link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+.link:hover::before {
+  left: 100%;
+}
+.link:hover { transform: translateY(-3px); background: #fff; }
+/* 社交分享按钮 */
+.social-share {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+  padding: 10px 0;
+}
+.social-share-title {
+  margin: 10px 0 5px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  animation: fadeIn 0.6s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: .3s;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.social-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+.social-btn:hover::before {
+  left: 100%;
+}
+.social-btn:hover { 
+  transform: translateY(-2px) scale(1.05); 
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.social-btn span {
+  transition: transform 0.3s ease;
+}
+.social-btn:hover span {
+  animation: iconBounce 0.6s ease-in-out;
+}
+@keyframes iconBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+/* 图片展示 */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin-top: 25px;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 14px;
+  transition: .3s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  animation: fadeInUp 0.8s ease-out both;
+}
+.gallery img:nth-child(2) { animation-delay: 0.1s; }
+.gallery img:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 8px 24px rgba(255,255,255,0.3);
+}
+/* 域名预览区域 */
+.preview-area {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
+  margin-top: 25px;
+  transition: all .3s ease;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  align-items: start;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+.preview-area:hover { background: rgba(255,255,255,0.3); }
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  animation: fadeInUp 0.6s ease-out both;
+}
+.preview-item:nth-child(2) { animation-delay: 0.2s; }
+.preview-item h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #fff;
+}
+.preview-item .remove-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,0,0,0.7);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  display: none;
+  transition: all 0.3s ease;
+}
+.preview-item:hover .remove-btn { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  transform: scale(1.1);
+  background: rgba(255,0,0,0.9);
+}
+.preview-frame {
+  width: 100%;
+  height: 300px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
+}
+.preview-item:hover .preview-frame {
+  transform: scale(1.02);
+}
+.preview-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+/* 添加预览输入 */
+.add-preview {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  margin-top: 25px;
+  transition: all .3s ease;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+.add-preview:hover { background: rgba(255,255,255,0.3); }
+.add-preview input {
+  width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.8);
+  color: #000;
+  font-size: 16px;
+  transition: box-shadow 0.3s ease;
+}
+.add-preview input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+}
+.add-preview button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: .3s;
+  position: relative;
+  overflow: hidden;
+}
+.add-preview button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+.add-preview button:hover::before {
+  left: 100%;
+}
+.add-preview button:hover { background: #fff; transform: translateY(-2px); }
+/* 控制按钮 */
+.control-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99;
+}
+.btn {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: .3s;
+  position: relative;
+  overflow: hidden;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+.btn:hover::before {
+  left: 100%;
+}
+.btn:hover { transform: scale(1.1); }
+/* 顶部状态条 - 调整为更紧凑的位置，避免遮挡 */
+.status-bar {
+  position: fixed;
+  top: 0; /* 移到顶部边缘 */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px; /* 略微减小padding以缩小高度 */
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 0 0 14px 14px; /* 底部圆角，顶部平直贴合 */
+  display: flex;
+  gap: 16px; /* 略微减小gap */
+  align-items: center;
+  color: #fff;
+  font-size: 13px; /* 略微减小字体 */
+  z-index: 50;
+  animation: slideDown 0.5s ease-out;
+}
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.qrcode-box {
+  display: none;
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  animation: fadeInScale 0.3s ease-out;
+}
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+footer {
+  color: var(--text-gray);
+  margin-top: 40px;
+  font-size: 13px;
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out 0.8s both;
+}
+@media (max-width: 768px) {
+  .preview-area {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .preview-frame {
+    height: 250px;
+  }
+  .add-preview input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .add-preview button {
+    width: 100%;
+    margin-left: 0;
+  }
+  .contact {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .social-share {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<!-- 背景 -->
+<video id="bgVideo" class="video-bg" autoplay loop playsinline muted>
+  <source src="video/flower.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+<!-- 顶部状态条 -->
+<div class="status-bar">
+  <span id="timeNow">🕓 加载中...</span>
+  <span id="weatherNow">🌤️ 获取天气...</span>
+</div>
+<!-- 主内容 -->
+<div class="main">
+  <div class="header">
+    <!-- 替换徽标 -->
+    <img src="img/logo.jpg" alt="Logo">
+    <h1>allapple.top</h1>
+    <p>Apple风格聚合页 · 视频 · 音乐 · 灵感</p>
+  </div>
+  <div class="glass">
+    <a href="https://allapple.top" class="link" target="_blank">🌐 allapple.top 主站</a>
+    <a href="https://all.allapple.top" class="link" target="_blank">🌀 all.allapple.top 子域</a>
+    <a href="#" class="link" id="shareBtn">📱 生成分享二维码</a>
+    <div class="social-share-title">分享到</div>
+    <div class="social-share">
+      <a href="#" class="social-btn" id="shareX"><span>🐦</span> X (Twitter)</a>
+      <a href="#" class="social-btn" id="shareFB"><span>📘</span> Facebook</a>
+      <a href="#" class="social-btn" id="shareWB"><span>🌐</span> Weibo</a>
+      <a href="#" class="social-btn" id="shareTelegram"><span>📱</span> Telegram</a>
+      <a href="#" class="social-btn" id="shareEmail"><span>📧</span> 邮箱</a>
+    </div>
+  </div>
+  <div class="gallery">
+    <img src="img/share.jpg" alt="展示图1">
+    <img src="img/logo.jpg" alt="展示图2">
+  </div>
+  <!-- 域名预览区域 -->
+  <div class="preview-area" id="previewArea">
+    <div class="preview-item">
+      <h3>🌐 allapple.top 主站预览</h3>
+      <button class="remove-btn" onclick="removePreview(this)">×</button>
+      <div class="preview-frame">
+        <iframe src="https://allapple.top" title="allapple.top Preview"></iframe>
+      </div>
+    </div>
+    <div class="preview-item">
+      <h3>🌀 all.allapple.top 子域预览</h3>
+      <button class="remove-btn" onclick="removePreview(this)">×</button>
+      <div class="preview-frame">
+        <iframe src="https://all.allapple.top" title="all.allapple.top Preview"></iframe>
+      </div>
+    </div>
+  </div>
+  <!-- 添加预览输入 -->
+  <div class="add-preview">
+    <input type="url" id="newDomain" placeholder="输入域名 (如: https://example.com)" />
+    <button onclick="addPreview()">添加预览</button>
+  </div>
+  <!-- 联系方式 -->
+  <div class="glass contact">
+    <h3>联系方式</h3>
+    <a href="https://x.com/XIAO2027btc" class="social-btn" target="_blank">🐦 @XIAO2027btc</a>
+    <a href="mailto:xiaopengsvip@gmail.com" class="social-btn">📧 xiaopengsvip@gmail.com</a>
+  </div>
+  <footer>© <span id="year"></span> allapple.top · Designed by 小鹏</footer>
+</div>
+<!-- 控制按钮 -->
+<div class="control-btn">
+  <div class="btn" id="musicBtn" title="播放音乐">🎵</div>
+  <div class="btn" id="videoBtn" title="暂停视频">🎬</div>
+  <div class="btn" id="soundBtn" title="切换视频声音">🔊</div>
+</div>
+<!-- 二维码容器 -->
+<div class="qrcode-box" id="qrcodeBox">
+  <canvas id="qrcode"></canvas>
+  <p style="color:#fff;font-size:13px;">扫码访问 allapple.top</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+// 年份显示
+document.getElementById('year').textContent = new Date().getFullYear();
+// 时间显示
+function updateTime() {
+  const now = new Date();
+  document.getElementById('timeNow').textContent = '🕓 ' + now.toLocaleString();
+}
+setInterval(updateTime, 1000);
+updateTime();
+// 天气（公共 API）
+async function loadWeather() {
+  try {
+    const res = await fetch('https://wttr.in/?format=%C+%t');
+    const text = await res.text();
+    document.getElementById('weatherNow').textContent = '🌤️ ' + text;
+  } catch {
+    document.getElementById('weatherNow').textContent = '☁️ 无法获取天气';
+  }
+}
+loadWeather();
+// 音乐控制
+const music = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+music.loop = true; music.volume = 0.5;
+let musicPlaying = false;
+document.getElementById('musicBtn').onclick = () => {
+  if (!musicPlaying) { music.play(); document.getElementById('musicBtn').textContent='⏸️'; }
+  else { music.pause(); document.getElementById('musicBtn').textContent='🎵'; }
+  musicPlaying = !musicPlaying;
+};
+// 视频播放控制
+const video = document.getElementById('bgVideo');
+let videoPlaying = true;
+document.getElementById('videoBtn').onclick = () => {
+  videoPlaying ? video.pause() : video.play();
+  document.getElementById('videoBtn').textContent = videoPlaying ? '▶️' : '⏸️';
+  videoPlaying = !videoPlaying;
+};
+// 视频声音控制
+let videoMuted = true;
+document.getElementById('soundBtn').onclick = () => {
+  videoMuted = !videoMuted;
+  video.muted = videoMuted;
+  document.getElementById('soundBtn').textContent = videoMuted ? '🔇' : '🔊';
+};
+// 二维码分享
+const shareBtn = document.getElementById('shareBtn');
+const qrcodeBox = document.getElementById('qrcodeBox');
+shareBtn.addEventListener('click', () => {
+  qrcodeBox.style.display = 'block';
+  QRCode.toCanvas(document.getElementById('qrcode'), window.location.href, { width: 150 });
+});
+qrcodeBox.addEventListener('click', ()=> qrcodeBox.style.display = 'none');
+// 社交分享
+const currentUrl = encodeURIComponent(window.location.href);
+const shareText = encodeURIComponent('探索 allapple.top —— Apple风格聚合页，视频、音乐、灵感与极简设计的融合！');
+document.getElementById('shareX').href = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${shareText}`;
+document.getElementById('shareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+document.getElementById('shareWB').href = `http://service.weibo.com/share/share.php?url=${currentUrl}&title=${shareText}`;
+document.getElementById('shareTelegram').href = `https://t.me/share/url?url=${currentUrl}&text=${shareText}`;
+document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('探索 allapple.top —— Apple风格聚合页')}&body=${shareText}%0A%0A${currentUrl}`;
+// 添加域名预览
+function addPreview() {
+  const urlInput = document.getElementById('newDomain');
+  const url = urlInput.value.trim();
+  if (!url) return alert('请输入有效的域名');
+  if (!url.startsWith('http')) url = 'https://' + url;
+  const previewArea = document.getElementById('previewArea');
+  const newItem = document.createElement('div');
+  newItem.className = 'preview-item';
+  newItem.style.animationDelay = '0s';
+  newItem.innerHTML = `
+    <h3>${url}</h3>
+    <button class="remove-btn" onclick="removePreview(this)">×</button>
+    <div class="preview-frame">
+      <iframe src="${url}" title="${url} Preview"></iframe>
+    </div>
+  `;
+  previewArea.appendChild(newItem);
+  urlInput.value = '';
+}
+// 移除预览
+function removePreview(btn) {
+  btn.closest('.preview-item').remove();
+}
+</script>
+</body>
+</html>

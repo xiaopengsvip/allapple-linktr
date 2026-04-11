@@ -1,0 +1,7 @@
+{
+  "name": "Everett - AllApple",
+  "description": "Welcome to the new universe of AllApple. Everett is a revolution in lifestyle, blending intelligence, art, and emotion.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

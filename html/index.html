@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>allapple.top · 新业务敬请期待</title>
+
+<!-- 浏览器徽标 -->
+<link rel="icon" type="image/png" href="img/logo.jpg">
+<link rel="apple-touch-icon" href="img/logo.jpg" sizes="180x180">
+<link rel="shortcut icon" href="img/logo.jpg">
+
+<meta name="description" content="allapple.top 默认占位页，新业务开发中，保持 Apple 风格极简设计，带诗意短句。">
+
+<style>
+:root {
+  --glass-bg: rgba(255,255,255,0.25);
+  --glass-strong: rgba(255,255,255,0.35);
+  --border: rgba(255,255,255,0.3);
+  --radius: 20px;
+  --shadow: 0 8px 30px rgba(0,0,0,0.25);
+  --text-gray: #ddd;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* 背景视频 */
+.video-bg {
+  position: fixed;
+  top:0; left:0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.75);
+}
+
+/* 毛玻璃覆盖层 */
+.bg-overlay {
+  position: fixed;
+  top:0; left:0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+  z-index: -1;
+}
+
+/* 主容器 */
+.main {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 24px;
+  text-align: center;
+}
+
+/* LOGO & 标题 */
+.header img {
+  width: 120px; height: 120px;
+  border-radius: 30px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.header h1 {
+  margin-top: 12px; font-size: 32px;
+}
+.header .subtitle {
+  color: var(--text-gray); font-size: 16px; margin-top: 6px; line-height: 1.5;
+}
+.header .poetic {
+  color: var(--text-gray); font-size: 14px; margin-top: 12px; font-style: italic;
+}
+
+/* 时间 & 天气 */
+.widget-row {
+  display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center;
+}
+.widget {
+  padding: 14px 20px; border-radius: var(--radius);
+  background: var(--glass-strong); border: 1px solid var(--border); box-shadow: var(--shadow);
+  text-align: center; min-width: 140px;
+}
+.widget .clock { font-size: 20px; font-weight: 700; }
+.widget .date, .widget .weather { font-size: 14px; color: var(--text-gray); margin-top: 4px; }
+
+/* 链接区域 */
+.links {
+  display: flex; flex-direction: column; gap: 12px; margin-top: 20px;
+  width: 100%; max-width: 400px;
+}
+.links a {
+  display: block; padding: 14px 16px; border-radius: 14px;
+  background: rgba(255,255,255,0.85); color: #000; text-decoration: none;
+  font-weight: 600; text-align: center; transition: .3s;
+}
+.links a:hover { background: #fff; transform: translateY(-2px); }
+
+/* 轮播展示 */
+.carousel {
+  position: relative; width: 90%; max-width: 700px; margin-top: 30px;
+  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); border:1px solid var(--border);
+}
+.carousel-slide {
+  display: none; width: 100%; height: 300px;
+}
+.carousel-slide img, .carousel-slide video {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.carousel-controls {
+  position: absolute; top: 50%; left:0; width:100%;
+  display:flex; justify-content: space-between; transform: translateY(-50%);
+  padding: 0 10px;
+  pointer-events: none;
+}
+.carousel-controls button {
+  background: rgba(255,255,255,0.7); border:none; border-radius:50%;
+  width:36px; height:36px; cursor:pointer; pointer-events: all; font-size:20px;
+}
+
+/* 控制按钮 */
+.control-btn {
+  position: fixed; bottom: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  z-index: 99;
+}
+.btn {
+  width: 58px; height: 58px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px); cursor: pointer; font-size: 24px; transition: .3s;
+}
+.btn:hover { transform: scale(1.05); }
+
+/* 页脚 */
+footer {
+  color: var(--text-gray); margin-top: 40px; font-size: 13px; text-align: center;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .header h1 { font-size: 26px; }
+  .header .subtitle, .header .poetic { font-size: 14px; }
+  .widget-row { flex-direction: column; gap: 10px; }
+  .links { max-width: 90%; }
+}
+@media (max-width: 480px) {
+  .header img { width: 100px; height: 100px; }
+  .header h1 { font-size: 22px; }
+  .btn { width: 50px; height: 50px; font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 背景视频 -->
+<video id="bgVideo" class="video-bg" autoplay loop playsinline muted>
+  <source src="video/flower.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
+
+<div class="main">
+  <div class="header">
+    <img src="img/logo.jpg" alt="Logo">
+    <h1>allapple.top</h1>
+    <div class="subtitle">新业务开发中 · 敬请期待</div>
+    <div class="poetic">明月几时有，把酒问青天；未见花开，静待春风来。</div>
+    <div class="poetic">天行健，君子以自强不息；创新路上，恭候君来赏。</div>
+  </div>
+
+  <!-- 时间 & 天气 -->
+  <div class="widget-row">
+    <div class="widget">
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="date" id="date">--</div>
+    </div>
+    <div class="widget">
+      <div class="weather" id="weather">获取天气中…</div>
+    </div>
+  </div>
+
+  <!-- 链接 -->
+  <div class="links">
+    <a href="https://allapple.top" target="_blank">🌐 allapple.top 主站</a>
+    <a href="https://all.allapple.top" target="_blank">🌀 all.allapple.top 子域</a>
+  </div>
+
+  <!-- 轮播展示 -->
+  <div class="carousel">
+    <div class="carousel-slide" style="display:block;"><img src="img/logo.jpg" alt="预览Logo"></div>
+    <div class="carousel-slide"><img src="img/share.jpg" alt="展示图"></div>
+    <div class="carousel-slide"><video src="video/flower.mp4" muted loop></video></div>
+    <div class="carousel-controls">
+      <button id="prev">&#10094;</button>
+      <button id="next">&#10095;</button>
+    </div>
+  </div>
+
+  <footer>© <span id="year"></span> allapple.top · Designed by 小鹏</footer>
+</div>
+
+<!-- 控制按钮 -->
+<div class="control-btn">
+  <div class="btn" id="musicBtn" title="播放音乐">🎵</div>
+  <div class="btn" id="videoBtn" title="暂停视频">🎬</div>
+  <div class="btn" id="soundBtn" title="切换视频声音">🔊</div>
+</div>
+
+<script>
+// 年份
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// 时间
+function pad(n){ return n<10?'0'+n:n; }
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  document.getElementById('date').textContent=now.toLocaleDateString();
+}
+updateClock(); setInterval(updateClock,1000);
+
+// 音乐播放
+const music = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+music.loop=true; music.volume=0.5; let musicPlaying=false;
+document.getElementById('musicBtn').onclick=()=>{
+  if(!musicPlaying){ music.play().then(()=>{musicPlaying=true;document.getElementById('musicBtn').textContent='⏸️';}).catch(()=>alert("请点击页面启用音乐")); }
+  else{ music.pause(); musicPlaying=false; document.getElementById('musicBtn').textContent='🎵'; }
+};
+
+// 视频控制
+const video=document.getElementById('bgVideo'); let videoPlaying=true;
+document.getElementById('videoBtn').onclick=()=>{
+  if(videoPlaying){ video.pause(); document.getElementById('videoBtn').textContent='▶️'; }
+  else{ video.play().catch(()=>alert("点击页面启用播放")); document.getElementById('videoBtn').textContent='⏸️'; }
+  videoPlaying=!videoPlaying;
+};
+
+// 视频声音
+let videoMuted=true;
+document.getElementById('soundBtn').onclick=()=>{ videoMuted=!videoMuted; video.muted=videoMuted; document.getElementById('soundBtn').textContent=videoMuted?'🔇':'🔊'; };
+
+// 自动播放视频
+video.play().catch(()=>console.warn("视频自动播放被阻止"));
+
+// 天气（Open-Meteo API）
+function fetchWeather(lat,lon){
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
+    .then(r=>r.json()).then(data=>{
+      if(data && data.current_weather){
+        document.getElementById('weather').textContent=`🌡️ ${data.current_weather.temperature}°C 风速 ${data.current_weather.windspeed} m/s`;
+      }else{ document.getElementById('weather').textContent='天气获取失败'; }
+    }).catch(()=>{ document.getElementById('weather').textContent='天气获取失败'; });
+}
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(pos=>fetchWeather(pos.coords.latitude,pos.coords.longitude),
+    ()=>fetchWeather(35.682839,139.759455), {timeout:8000});
+}else{ fetchWeather(35.682839,139.759455); }
+
+// 轮播逻辑
+let carouselIndex=0;
+const slides=document.querySelectorAll('.carousel-slide');
+const total=slides.length;
+function showSlide(index){
+  slides.forEach((s,i)=>{ s.style.display=(i===index)?'block':'none'; });
+  // 自动播放视频如果当前是video
+  slides.forEach((s,i)=>{ if(s.querySelector('video')) s.querySelector('video').pause(); });
+  const vid=slides[index].querySelector('video'); if(vid){ vid.play(); }
+}
+document.getElementById('next').onclick=()=>{ carouselIndex=(carouselIndex+1)%total; showSlide(carouselIndex); };
+document.getElementById('prev').onclick=()=>{ carouselIndex=(carouselIndex-1+total)%total; showSlide(carouselIndex); };
+setInterval(()=>{ carouselIndex=(carouselIndex+1)%total; showSlide(carouselIndex); }, 8000); // 自动轮播
+</script>
+</body>
+</html>
